@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAM Marinheiro Aprendiz - Foco na Aprovação</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23001f3f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='5' r='3'/%3E%3Cline x1='12' y1='22' x2='12' y2='8'/%3E%3Cpath d='M5 12H2a10 10 0 0 0 20 0h-3'/%3E%3C/svg%3E">
+
+    <title>EAM Marinheiro Aprendiz | Foco na Aprovação</title>
+
+    <meta name="theme-color" content="#001f3f">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#001f3f">
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M5 5l14 14M5 19L19 5M12 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+            </svg>
+            <h1>EAM Study</h1>
+        </div>
+        <div class="stats-area">
+            <div class="streak-counter">
+                <i class="fas fa-fire"></i> <span id="streak-display">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main id="app">
+        <section id="view-home" class="active-view">
+            <div class="daily-status-card">
+                <h2>Meta Diária</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="daily-progress" style="width: 0%"></div>
+                </div>
+                <button id="btn-daily-start" class="btn-primary btn-large">
+                    INICIAR ESTUDOS DO DIA
+                </button>
+            </div>
+
+            <h3>Matérias</h3>
+            <div class="subjects-grid">
+                </div>
+        </section>
+
+        <section id="view-subject" class="hidden-view">
+            <div class="header-nav">
+                <button class="btn-icon" onclick="navigate('home')"><i class="fas fa-arrow-left"></i></button>
+                <h2 id="subject-title">Matéria</h2>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-secondary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Adicionar Conteúdo
+                </button>
+                <button class="btn-primary" onclick="startSubjectStudy()">
+                    <i class="fas fa-dumbbell"></i> Praticar Matéria
+                </button>
+            </div>
+
+            <div id="subject-content-list" class="content-list">
+                </div>
+        </section>
+
+        <section id="view-study" class="hidden-view">
+            <div class="study-progress">
+                <button class="close-study" onclick="navigate('home')"><i class="fas fa-times"></i></button>
+                <div class="bar-bg"><div class="bar-fill" id="study-progress-bar"></div></div>
+            </div>
+
+            <div id="study-container">
+                </div>
+
+            <div id="feedback-area" class="feedback-area hidden">
+                <div class="feedback-content">
+                    <h3 id="feedback-title"></h3>
+                    <p id="feedback-text"></p>
+                    <button id="btn-next-question" class="btn-primary">CONTINUAR</button>
+                </div>
+            </div>
+        </section>
+
+        <div id="modal-add" class="modal hidden">
+            <div class="modal-content">
+                <h3>Adicionar à <span id="modal-subject-name"></span></h3>
+                
+                <label>Tipo:</label>
+                <div class="type-selector">
+                    <button class="btn-option active" onclick="setAddType('question')">Questão</button>
+                    <button class="btn-option" onclick="setAddType('note')">Resumo/Link</button>
+                </div>
+
+                <div id="form-question">
+                    <textarea id="inp-q-text" placeholder="Enunciado da questão..."></textarea>
+                    <input type="text" id="inp-q-a" placeholder="Alternativa A">
+                    <input type="text" id="inp-q-b" placeholder="Alternativa B">
+                    <input type="text" id="inp-q-c" placeholder="Alternativa C">
+                    <input type="text" id="inp-q-d" placeholder="Alternativa D">
+                    <select id="inp-q-correct">
+                        <option value="a">Resposta Correta: A</option>
+                        <option value="b">Resposta Correta: B</option>
+                        <option value="c">Resposta Correta: C</option>
+                        <option value="d">Resposta Correta: D</option>
+                    </select>
+                    <textarea id="inp-q-explanation" placeholder="Explicação do gabarito (opcional)..."></textarea>
+                </div>
+
+                <div id="form-note" class="hidden">
+                    <input type="text" id="inp-n-title" placeholder="Título do Resumo">
+                    <textarea id="inp-n-text" placeholder="Texto, links de vídeo, anotações..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-text" onclick="closeAddModal()">Cancelar</button>
+                    <button class="btn-primary" onclick="saveContent()">SALVAR</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="navigate('home')">
+            <i class="fas fa-home"></i>
+        </button>
+        <button class="nav-item" onclick="alert('Funcionalidade de Simulado Completo em breve!')">
+            <i class="fas fa-file-alt"></i>
+        </button>
+        <button class="nav-item" onclick="alert('Estatísticas detalhadas em breve!')">
+            <i class="fas fa-chart-line"></i>
+        </button>
+        <button class="nav-item" onclick="alert('Perfil do Marinheiro')">
+            <i class="fas fa-user"></i>
+        </button>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
