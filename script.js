@@ -199,22 +199,32 @@ function setAddType(type) {
 function saveContent() {
     const subjectData = userState.data[currentSubject];
     
-    if (currentAddType === 'question') {
-        const q = {
-            type: 'question',
-            text: document.getElementById('inp-q-text').value,
-            options: {
-                a: document.getElementById('inp-q-a').value,
-                b: document.getElementById('inp-q-b').value,
-                c: document.getElementById('inp-q-c').value,
-                d: document.getElementById('inp-q-d').value,
-            },
-            correct: document.getElementById('inp-q-correct').value,
-            explanation: document.getElementById('inp-q-explanation').value
-        };
-        if(!q.text || !q.options.a) return alert("Preencha os campos!");
-        subjectData.questions.push(q);
-    } else {
+   if (currentAddType === 'question') {
+    const q = {
+        type: 'question',
+        text: document.getElementById('inp-q-text').value,
+        options: {
+            a: document.getElementById('inp-q-a').value,
+            b: document.getElementById('inp-q-b').value,
+            c: document.getElementById('inp-q-c').value,
+            d: document.getElementById('inp-q-d').value,
+        },
+        correct: document.getElementById('inp-q-correct').value,
+        explanation: document.getElementById('inp-q-explanation').value
+    };
+
+    // 🔥 AUTO-DETECÇÃO DO GABARITO NO TEXTO
+    const autoMatch = q.text.match(/(resposta|gabarito|correta)\s*[:\-]?\s*([abcd])/i);
+
+    if (autoMatch) {
+        q.correct = autoMatch[2].toLowerCase();
+    }
+
+    if(!q.text || !q.options.a)
+        return alert("Preencha os campos!");
+
+    userState.data[currentSubject].questions.push(q);
+}else {
         const n = {
             type: 'note',
             title: document.getElementById('inp-n-title').value,
